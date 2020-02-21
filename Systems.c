@@ -9,7 +9,7 @@ int Battery_Level;
 int Battery_Percent;
 
 
-ISR(0x002A) //ADC Conversion Complete Interrupt
+ISR(ADC_vect) //ADC Conversion Complete Interrupt
 {
 	Battery_Level = ADC;
 }
