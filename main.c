@@ -9,10 +9,12 @@
 #include <util/delay.h>
 #include <avr/interrupt.h>
 
-#define F_CPU	16000000
+#define F_CPU	16000000UL
 #define BAUD	9600
 #define MYUBRR	((F_CPU/16/BAUD) - 1)
-
+#define LED_ON	PORTB |= (1<<PORTB5);
+#define LED_OFF PORTB &= ~(1<<PORTB5);
+#define LED_TOGGLE PINB |= (1<<PINB5);
 #define RX_BUFFER_SIZE 128
 
 char rxBuffer[RX_BUFFER_SIZE];
@@ -33,7 +35,7 @@ int main(void)
 	UCSR0C |= (1<<UCSZ00) | (1<<UCSZ01); //8 bit
 	//Turn on external interrupts
 	sei();
-	
+	DDRB |= (1<<DDB5); //Set LED as output
 	
 	//PD0 = USART RXD
 	
@@ -42,6 +44,15 @@ int main(void)
     while (1) 
     {
 		char coorData = getChar();
+		if(coorData == 0x0)
+		{
+			LED_OFF;
+			_delay_ms(500);
+		}
+		else
+		{
+			LED_TOGGLE;
+		}
     }
 }
 
